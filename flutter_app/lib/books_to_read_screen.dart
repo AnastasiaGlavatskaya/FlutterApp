@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/reading_list_screen.dart';
+import 'books.dart';
 
 
 class BooksToReadScreen extends StatelessWidget {
@@ -7,8 +7,8 @@ class BooksToReadScreen extends StatelessWidget {
   final double text_size = 20.0;
 
   final List<Book> _books_to_read = [
-    new Book('Ninth House','Leigh Bardugo','5'),
-    new Book('The Goldfinch','Donna Tartt','4')
+    new Book(1, 'Ninth House','Leigh Bardugo','5'),
+    new Book(2, 'The Goldfinch','Donna Tartt','4')
   ];
 
   @override
@@ -52,14 +52,11 @@ class BooksToReadScreen extends StatelessWidget {
                               Icon(Icons.delete),
                             ],
                           ),
-
                         ],
-
                       );
                     },
                   )
               ),
-
             ]
 
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'reading_list_screen.dart';
-
+import 'books.dart';
 
 class AddItemScreen extends StatefulWidget {
   static const String routeName = 'add_book';
@@ -8,13 +7,12 @@ class AddItemScreen extends StatefulWidget {
   _AddItemScreen createState() => _AddItemScreen();
 }
 
-
 class _AddItemScreen extends State<AddItemScreen> {
   final double text_size = 20.0;
   String dropdownValue;
-
   TextEditingController _titleController;
   TextEditingController _authorController;
+
   @override
   void initState() {
     dropdownValue = 'to read';
@@ -152,7 +150,7 @@ class _AddItemScreen extends State<AddItemScreen> {
                           }
                           else {
                             Book book = new Book(
-                                _titleController.text, _authorController.text,
+                                0, _titleController.text, _authorController.text,
                                 dropdownValue);
                             Navigator.pop(context, book);
                           }
@@ -167,5 +165,4 @@ class _AddItemScreen extends State<AddItemScreen> {
       ),
     );
   }
-
 }

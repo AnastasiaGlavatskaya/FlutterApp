@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/database_provider.dart';
+import 'books.dart';
 import 'add_item_screen.dart';
 import 'books_to_read_screen.dart';
+import 'edit_item_screen.dart';
 
-class Book {
-  String title;
-  String author;
-  String mark;
-  Book(String title, String author, String mark) {
-    this.title=title;
-    this.author=author;
-    this.mark=mark;
-  }
-}
 
 class ReadingListScreen extends StatefulWidget {
-
- // final _books = new List<Book>();
   @override
   _ReadingListScreenState createState() => _ReadingListScreenState();
 }
@@ -25,10 +16,21 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
 
   @override
   void initState(){
-    _books = new List<Book>();
-    _books.add(new Book('Ninth House','Leigh Bardugo','5'));
-    _books.add(new Book('The Goldfinch','Donna Tartt','4'));
     super.initState();
+
+    _books = new List<Book>();
+
+    DatabaseProvider().openBooksDatabase().then((_) {
+      DatabaseProvider().getList().then((items) {
+        setState(() {
+          _books = items;
+        });
+      });
+    });
+
+    //_books.add(new Book(1, 'Ninth House','Leigh Bardugo','5'));
+    //_books.add(new Book(2, 'The Goldfinch','Donna Tartt','4'));
+
   }
   @override
   Widget build(BuildContext context) {
@@ -67,8 +69,19 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  //edit
+                                onTap: () async {
+                                 var item = await
+                                  Navigator.pushNamed(context, EditItemScreen.routeName,
+                                      arguments: ScreenArguments(
+                                          _books[index]
+                                      ));
+                                 if (item!=null) {
+                                   Book editedBook = item;
+                                   setState(() {
+                                     _books[index] = editedBook;
+                                     DatabaseProvider().update(editedBook);
+                                   });
+                                 };
                                 },
                                 child: Icon(Icons.edit_outlined),
                               ),
@@ -82,13 +95,13 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
                                         actions: [
                                           TextButton(
                                             onPressed : () {
-                                              //_books.removeAt(index);
                                               Navigator.pop(context);
                                             },
                                             child:  Text('No'),
                                           ),
                                           TextButton(
                                               onPressed: () {
+                                                DatabaseProvider().delete(_books[index].id);
                                                 setState(() {
                                                   _books.removeAt(index);
                                                 });
@@ -144,12 +157,14 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed:  (){
           Navigator.pushNamed(context, AddItemScreen.routeName).then((newBook) => {
-            if (newBook!=null) {
-              setState(()
-          {
-            _books.add(newBook);
+
+              setState(() {
+                Book book = newBook;
+                book.id = _books.length+1;
+                _books.add(book);
+            DatabaseProvider().saveTable(book);
           })
-            }
+
           });
           },//addItem,
         child: Icon(Icons.add),
