@@ -34,4 +34,11 @@ class Book {
     mark = map[columnMark];
   }
 
+  sortBy(String field) {
+    if (field == 'date') return this.id;
+    if (field == 'title') return this.title;
+    if (field == 'author') return this.author;
+    if (field == 'mark') return this.mark;
+  }
+
 }

@@ -27,7 +27,19 @@ class ReadingListApp extends StatelessWidget {
             },
           );
         }
+        else
+        if (settings.name == BooksToReadScreen.routeName) {
+          final Arguments args = settings.arguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return BooksToReadScreen(
+                items: args.items,
+              );
+            },
+          );
+        }
       },
+
       title: 'Reading List',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
@@ -35,7 +47,7 @@ class ReadingListApp extends StatelessWidget {
       home: ReadingListScreen(),
       routes: {
     AddItemScreen.routeName: (context) => AddItemScreen(),
-    BooksToReadScreen.routeName: (context) => BooksToReadScreen(),
+   // BooksToReadScreen.routeName: (context) => BooksToReadScreen(),
    // EditItemScreen.routeName: (context) => EditItemScreen(),
 
     },

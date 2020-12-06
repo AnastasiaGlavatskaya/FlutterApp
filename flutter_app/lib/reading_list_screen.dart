@@ -13,6 +13,7 @@ class ReadingListScreen extends StatefulWidget {
 
 class _ReadingListScreenState extends State<ReadingListScreen> {
   List<Book> _books;
+  String dropdownValue = 'date';
 
   @override
   void initState(){
@@ -49,7 +50,7 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
                     return Column(
                       children: [
                         Container(
-                         // color : true ? Colors.black12 : Colors.transparent,
+                          color : ((index % 2) == 1) ? Colors.black12 : Colors.transparent,
                           child: Row(
                             children: [
                               Expanded(
@@ -119,21 +120,24 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
                             ],
                           ),
                         ),
-                         Row(
-                           children: [
-                             Padding(
-                               padding: const EdgeInsets.fromLTRB(10.0, 0, 2.0, 0),
-                               child: Icon(Icons.star),
-                             ),
-                             Expanded(
-                             child: Text(
-                               '${_books[index].mark}',
-                               style: TextStyle(
-                                   fontSize: 20.0
+                         Container(
+                           color : ((index % 2) == 1) ? Colors.black12 : Colors.transparent,
+                           child: Row(
+                             children: [
+                               Padding(
+                                 padding: const EdgeInsets.fromLTRB(40.0, 0, 2.0, 0),
+                                 child: Icon(Icons.star),
                                ),
-                             ),
-                             )
-                           ],
+                               Expanded(
+                               child: Text(
+                                 '${_books[index].mark}',
+                                 style: TextStyle(
+                                     fontSize: 18.0
+                                 ),
+                               ),
+                               )
+                             ],
+                           ),
                          ),
                       ],
                     );
@@ -143,13 +147,68 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
 
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                onPressed : () {
-                  Navigator.pushNamed(context, BooksToReadScreen.routeName);
-                },
-                child: Text ('Books to read'),
+              child: Center(
+                child: Row(
+                  children: [
+                     Padding(
+                       padding: const EdgeInsets.all(6.0),
+                       child: Text (
+                           'Sort by',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.0,
+                         ),
+                       ),
+                     ),
+                    DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                      ),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                          _books.sort((a, b) => a.sortBy(dropdownValue).compareTo(b.sortBy(dropdownValue)));
+                        });
+                      },
+                      items: <String>['date', 'title', 'author', 'mark']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                              value
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(40.0, 10.0, 0.0, 10.0),
+                      child: ElevatedButton(
+                        onPressed : () {
+                          List<Book> to_read = new List<Book>();
+                          for (var item in _books) {
+                            if (item.mark == 'to read') {
+                              to_read.add(item);
+                            }
+                          }
+                          Navigator.pushNamed(context, BooksToReadScreen.routeName,
+                              arguments: Arguments(to_read));
+                        },
+                        child: Text ('Books to read'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
+            ),
           ]
         ),
       ),
@@ -157,11 +216,11 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed:  (){
           Navigator.pushNamed(context, AddItemScreen.routeName).then((newBook) => {
-
               setState(() {
                 Book book = newBook;
                 book.id = _books.length+1;
                 _books.add(book);
+                _books.sort((a, b) => a.sortBy(dropdownValue).compareTo(b.sortBy(dropdownValue)));
             DatabaseProvider().saveTable(book);
           })
 
