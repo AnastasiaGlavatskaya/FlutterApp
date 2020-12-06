@@ -199,6 +199,7 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
                               to_read.add(item);
                             }
                           }
+                          to_read.sort((a, b) => a.sortBy('date').compareTo(b.sortBy('date')));
                           Navigator.pushNamed(context, BooksToReadScreen.routeName,
                               arguments: Arguments(to_read));
                         },
