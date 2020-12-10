@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'model/book_model.dart';
 import 'reading_list_screen.dart';
 import 'edit_item_screen.dart';
 import 'add_item_screen.dart';
@@ -8,7 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 void main() {
-  runApp(ReadingListApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => BookModel(),
+      child: ReadingListApp(),
+  ));
 }
 
 class ReadingListApp extends StatelessWidget {

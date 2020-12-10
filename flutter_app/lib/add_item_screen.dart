@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'books.dart';
+import 'package:flutter_app/model/book_model.dart';
+import 'package:provider/provider.dart';
+import 'database_provider.dart';
 
 class AddItemScreen extends StatefulWidget {
   static const String routeName = 'add_book';
@@ -111,6 +114,7 @@ class _AddItemScreen extends State<AddItemScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton(
                       onPressed : () {
+                        final BookModel model = context.read<BookModel>();
                         _titleController.text = _titleController.text.trim();
                         _authorController.text = _authorController.text.trim();
                         if (_titleController.text == '') {
@@ -152,9 +156,10 @@ class _AddItemScreen extends State<AddItemScreen> {
                           }
                           else {
                             Book book = new Book(
-                                0, _titleController.text, _authorController.text,
+                                model.items.length+1, _titleController.text, _authorController.text,
                                 dropdownValue);
-                            Navigator.pop(context, book);
+                            model.add(book);
+                            Navigator.pop(context);
                           }
                         }
                       },

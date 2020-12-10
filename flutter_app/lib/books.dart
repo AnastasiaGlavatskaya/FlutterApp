@@ -38,7 +38,12 @@ class Book {
     if (field == 'date') return this.id;
     if (field == 'title') return this.title;
     if (field == 'author') return this.author;
-    if (field == 'mark') return this.mark;
+    if (field == 'mark') {
+      if (this.mark == 'to read')
+        return '0';
+      else
+        return this.mark;
+    }
   }
 
 }
