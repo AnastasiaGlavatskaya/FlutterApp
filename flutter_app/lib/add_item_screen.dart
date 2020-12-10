@@ -111,6 +111,8 @@ class _AddItemScreen extends State<AddItemScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton(
                       onPressed : () {
+                        _titleController.text = _titleController.text.trim();
+                        _authorController.text = _authorController.text.trim();
                         if (_titleController.text == '') {
                           showDialog(
                               context: context,

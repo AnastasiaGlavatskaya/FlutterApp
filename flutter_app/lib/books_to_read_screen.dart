@@ -7,7 +7,6 @@ class Arguments {
   Arguments(this.items);
 }
 
-
 class BooksToReadScreen extends StatefulWidget {
   static const String routeName = 'books_to_read_list';
   final List<Book> items;
